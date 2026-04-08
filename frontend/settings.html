@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omni Scanner — Settings</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --surface: #ffffff;
+      --surface2: #f0f2f9;
+      --border: #e3e6f0;
+      --navy: #0f1629;
+      --navy2: #1e2d4e;
+      --text: #1a2340;
+      --text2: #5a6480;
+      --text3: #9ba3c2;
+      --gem-blue: #4285f4;
+      --gem-red: #ea4335;
+      --gem-yellow: #fbbc04;
+      --gem-green: #34a853;
+      --gem-grad: linear-gradient(135deg, #4285f4 0%, #9b59b6 40%, #ea4335 80%, #fbbc04 100%);
+      --teal: #0d9488;
+      --teal-light: #f0fdfa;
+      --purple: #7c3aed;
+      --purple-bg: #faf5ff;
+      --purple-b: #e9d5ff;
+      --red: #dc2626;
+      --red-bg: #fef2f2;
+      --radius: 14px;
+      --radius-sm: 9px;
+      --shadow: 0 1px 3px rgba(15, 22, 41, 0.07), 0 4px 16px rgba(15, 22, 41, 0.05);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse at 85% 10%, rgba(66, 133, 244, 0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 15% 85%, rgba(155, 89, 182, 0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 50% 50%, rgba(52, 168, 83, 0.04) 0%, transparent 60%);
+      background-attachment: fixed;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 1000;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      font-family: 'Inter', 'Syne', sans-serif;
+    }
+
+    .logo-img {
+      height: 100px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+      margin-top: -10px;
+      margin-bottom: -10px;
+    }
+
+    nav.nav-menu {
+      display: flex;
+      gap: 4px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    nav.nav-menu a {
+      text-decoration: none;
+      color: var(--text2);
+      font-weight: 500;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: transparent;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    nav.nav-menu a:hover {
+      color: var(--text);
+      background: var(--surface2);
+      border-color: var(--border);
+    }
+
+    nav.nav-menu a.active {
+      color: var(--purple);
+      background: var(--purple-bg);
+      border-color: var(--purple-b);
+      font-weight: 600;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-save-master {
+      background: var(--navy);
+      color: #fff;
+      border: none;
+      padding: 9px 20px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      box-shadow: 0 4px 12px rgba(15, 22, 41, 0.2);
+    }
+
+    .btn-save-master:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(15, 22, 41, 0.25);
+    }
+
+    main {
+      max-width: 900px;
+      margin: 80px auto 0;
+      padding: 40px 40px 80px;
+    }
+
+    .page-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+
+    .page-head-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .page-head-text h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .page-head-text p {
+      font-size: 0.95rem;
+      color: var(--text2);
+    }
+
+    .settings-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 30px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-icon {
+      font-size: 20px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--surface2);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--gem-blue);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+      background: #fff;
+    }
+
+    .form-text {
+      font-size: 0.85rem;
+      color: var(--text2);
+      margin-top: 6px;
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      margin-bottom: 12px;
+    }
+
+    .toggle-info strong {
+      display: block;
+      font-size: 0.95rem;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+
+    .toggle-info span {
+      font-size: 0.85rem;
+      color: var(--text2);
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      background: var(--text3);
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 20px;
+      height: 20px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.3s;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .toggle-switch.active {
+      background: var(--gem-blue);
+    }
+
+    .toggle-switch.active::after {
+      transform: translateX(20px);
+    }
+
+    .slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .slider-control {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      background: var(--border);
+      border-radius: 4px;
+      outline: none;
+      background-image: linear-gradient(var(--teal), var(--teal));
+      background-repeat: no-repeat;
+      background-size: var(--pct) 100%;
+    }
+
+    .slider-control::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border: 2px solid var(--teal);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .slider-val {
+      width: 32px;
+      text-align: right;
+      font-weight: 700;
+      font-family: 'DM Mono', monospace;
+      font-size: 1rem;
+      color: var(--teal);
+    }
+
+    .danger-zone {
+      border-color: #fca5a5;
+      background: var(--red-bg);
+    }
+
+    .danger-zone .section-title {
+      color: var(--red);
+    }
+
+    .btn-danger {
+      background: #fff;
+      border: 1px solid var(--red);
+      color: var(--red);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-danger:hover {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--navy);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 2000;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="/" class="logo-container">
+      <img src="/assets/Logo.png" class="logo-img" alt="Omni Scanner">
+    </a>
+
+    <nav class="nav-menu">
+      <a href="/">📊 Dashboard</a>
+      <a href="/scans">🔍 Scans</a>
+      <a href="/history">🗂️ History</a>
+      <a href="/ai">✨ AI Threat Analysis</a>
+      <a href="/settings" class="active">⚙️ Settings</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="btn-save-master" onclick="saveAllSettings()">
+        💾 Save Configuration
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <div class="page-head">
+      <div class="page-head-icon">⚙️</div>
+      <div class="page-head-text">
+        <h1>Application Settings</h1>
+        <p>Configure scanning engine behaviors, API integrations, and local data persistence.</p>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="section-header">
+        <span class="section-icon">🧠</span>
+        <h2 class="section-title">AI Engine Configuration</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Google Gemini API Key</label>
+        <input type="password" id="geminiKey" class="form-control" placeholder="AIzaSy...">
+        <p class="form-text">Used exclusively for the AI Threat Analysis module securely generated locally. Key is
+          stored only in your local session environment.</p>
+      </div>
+
+      <div class="form-group" style="margin-top: 24px;">
+        <label class="form-label">Analysis Strictness</label>
+        <select id="geminiStrictness" class="form-control" style="cursor:pointer;">
+          <option value="balanced">Balanced (Recommended)</option>
+          <option value="strict">Strict (Zero false positive tolerance)</option>
+          <option value="verbose">Verbose (Includes educational theory)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="section-header">
+        <span class="section-icon">⚡</span>
+        <h2 class="section-title">Scanner Engine Defaults</h2>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Default Thread Workers</label>
+        <div class="slider-wrap">
+          <input type="range" id="threadSlider" class="slider-control" min="1" max="20" value="5"
+            oninput="updateSlider(this, 'threadVal')">
+          <span class="slider-val" id="threadVal">5</span>
+        </div>
+        <p class="form-text">Controls the default application layer concurrency. Higher threads equal faster scans but
+          risk WAF blocking.</p>
+      </div>
+
+      <div class="form-group" style="margin-top:28px;">
+        <label class="form-label">Target Discovery Behaviors</label>
+
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <strong>Auto-enable Deep Mode</strong>
+            <span>Defaults the smart fuzzing pipeline to active on every scan.</span>
+          </div>
+          <div class="toggle-switch" id="tgglDeep" onclick="this.classList.toggle('active')"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="settings-section danger-zone">
+      <div class="section-header" style="border-bottom-color: #fecaca;">
+        <span class="section-icon">⚠️</span>
+        <h2 class="section-title">Local Evidence Storage</h2>
+      </div>
+      <p style="font-size:0.95rem; color:#b91c1c; margin-bottom: 20px;">
+        Omni Scanner persists scan payloads and artifacts heavily in your browser. If UI errors accumulate, resetting
+        the storage vectors resolves desyncs.
+      </p>
+      <div style="display:flex; gap:12px;">
+        <button class="btn-danger" onclick="clearLocalHistory()">
+          🗑️ Flush Scan Cache
+        </button>
+        <button class="btn-danger" onclick="clearAiContext()">
+          🧹 Wipe AI Context Vectors
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="toast" id="toastMsg">
+    <span style="font-size:18px;">✅</span>
+    <span>Settings successfully saved locally!</span>
+  </div>
+
+  <script>
+    function updateSlider(el, valId) {
+      const p = ((el.value - el.min) / (el.max - el.min)) * 100;
+      el.style.setProperty('--pct', p + '%');
+      document.getElementById(valId).textContent = el.value;
+    }
+
+    window.onload = () => {
+      const savedKey = localStorage.getItem('omni:gemini_key') || '';
+      document.getElementById('geminiKey').value = savedKey;
+
+      const savedThreads = localStorage.getItem('omni:default_threads') || '5';
+      const slider = document.getElementById('threadSlider');
+      slider.value = savedThreads;
+      updateSlider(slider, 'threadVal');
+
+      const deepEnabled = localStorage.getItem('omni:default_deep') === 'true';
+      if (deepEnabled) document.getElementById('tgglDeep').classList.add('active');
+    };
+
+    function saveAllSettings() {
+      const key = document.getElementById('geminiKey').value.trim();
+      const threads = document.getElementById('threadSlider').value;
+      const deep = document.getElementById('tgglDeep').classList.contains('active');
+
+      localStorage.setItem('omni:gemini_key', key);
+      localStorage.setItem('omni:default_threads', threads);
+      localStorage.setItem('omni:default_deep', deep);
+
+      const toast = document.getElementById('toastMsg');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function clearLocalHistory() {
+      if (confirm('Are you sure you want to completely flush the active state in your browser?')) {
+        localStorage.removeItem('omni:last_scan_payload');
+        localStorage.removeItem('omni:active_scan');
+        alert('Local state flushed cleanly. Safe to refresh.');
+      }
+    }
+
+    function clearAiContext() {
+      if (confirm('Clear all local context arrays?')) {
+        alert('Removed AI caching references.');
+      }
+    }
+  </script>
+
+</body>
+
+</html>

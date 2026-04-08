@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Omni Scanner — AI Threat Intelligence</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --navy: #0f172a;
+      --accent: #7c3aed;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --radius: 16px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      --terminal-bg: #0f172a;
+      --red: #dc2626;
+      --amber: #d97706;
+      --blue: #2563eb;
+      --green: #16a34a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      background-image: radial-gradient(circle at 100% 0%, rgba(124, 58, 237, 0.05) 0%, transparent 40%);
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 1000;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-img {
+      height: 100px;
+      width: auto;
+      object-fit: contain;
+      margin-top: -10px;
+      margin-bottom: -10px;
+    }
+
+    nav.nav-menu {
+      display: flex;
+      gap: 4px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    nav.nav-menu a {
+      text-decoration: none;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    nav.nav-menu a:hover {
+      color: var(--navy);
+      background: #f1f5f9;
+    }
+
+    nav.nav-menu a.active {
+      color: var(--accent);
+      background: #faf5ff;
+      font-weight: 700;
+      border: 1px solid #e9d5ff;
+    }
+
+    main {
+      max-width: 1000px;
+      margin: 120px auto 100px;
+      padding: 0 40px;
+    }
+
+    /* INPUT BOX */
+    .input-box {
+      background: #fff;
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .url-input {
+      flex: 1;
+      padding: 12px 18px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+    }
+
+    .btn-run {
+      background: var(--navy);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-run:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+    }
+
+    /* TERMINAL */
+    #terminal {
+      background: var(--terminal-bg);
+      border-radius: 12px;
+      padding: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      height: 220px;
+      overflow-y: auto;
+      display: none;
+      margin-bottom: 32px;
+      border: 1px solid #1e293b;
+      line-height: 1.6;
+    }
+
+    .term-ai {
+      color: #c084fc;
+      font-weight: 600;
+    }
+
+    .term-success {
+      color: #4ade80;
+    }
+
+    /* DASHBOARD RESULT */
+    #dashboard {
+      display: none;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .dash-head {
+      padding: 24px 32px;
+      border-bottom: 1px solid var(--border);
+      background: #fafafa;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dash-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .dash-url {
+      font-family: 'JetBrains Mono';
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .risk-pill {
+      padding: 6px 16px;
+      border-radius: 99px;
+      font-weight: 800;
+      font-size: 0.75rem;
+      letter-spacing: 0.5px;
+      border: 1px solid transparent;
+    }
+
+    .risk-high {
+      background: #fef2f2;
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+
+    .risk-medium {
+      background: #fffbeb;
+      color: #d97706;
+      border-color: #fef3c7;
+    }
+
+    .risk-low {
+      background: #eff6ff;
+      color: #2563eb;
+      border-color: #dbeafe;
+    }
+
+    .risk-safe {
+      background: #f0fdf4;
+      color: #16a34a;
+      border-color: #dcfce7;
+    }
+
+    /* SCORE SECTION (THE 4 BARS) */
+    .section-lbl {
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .score-container {
+      padding: 32px;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .score-left {
+      text-align: center;
+    }
+
+    .score-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 4rem;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--navy);
+      letter-spacing: -2px;
+    }
+
+    .score-total {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .score-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bar-lbl {
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748b;
+      width: 60px;
+    }
+
+    .bar-bg {
+      flex: 1;
+      height: 6px;
+      background: #f1f5f9;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 99px;
+      transition: width 1s ease-out;
+    }
+
+    /* SUMMARY BOX */
+    .summary-box {
+      padding: 32px;
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+    }
+
+    .summary-card {
+      background: #edf2f7;
+      padding: 24px;
+      border-radius: 12px;
+      line-height: 1.7;
+      color: #334155;
+      font-size: 0.95rem;
+    }
+
+    /* FINDINGS LIST */
+    .findings-box {
+      padding: 32px;
+    }
+
+    .finding-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 0;
+      overflow: hidden;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    .finding-card:hover {
+      border-color: var(--accent);
+      background: #fff;
+      transform: translateX(4px);
+    }
+
+    .finding-bar {
+      width: 6px;
+      flex-shrink: 0;
+    }
+
+    .finding-body {
+      padding: 16px 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .finding-name {
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 2px;
+      font-size: 0.95rem;
+    }
+
+    .finding-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 600px;
+    }
+
+    .finding-tags {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* BRANDING & DISCLAIMER */
+    .page-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+      color: var(--navy);
+      margin-bottom: 32px;
+      letter-spacing: -1px;
+    }
+
+    .disclaimer-box {
+      margin-top: 60px;
+      padding: 24px;
+      border-top: 1px dashed var(--border);
+      text-align: center;
+    }
+
+    .disclaimer-text {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    .tag {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: #e2e8f0;
+      color: #475569;
+      text-decoration: none;
+    }
+
+    .tag:hover {
+      background: #cbd5e1;
+    }
+
+    .tag-highlight {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    /* ACTIONS */
+    .dash-footer {
+      padding: 32px;
+      text-align: center;
+      background: #fafafa;
+      border-top: 1px solid var(--border);
+    }
+
+    .btn-dl {
+      background: var(--navy);
+      color: #fff;
+      padding: 16px 40px;
+      border-radius: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      transition: 0.2s;
+    }
+
+    .btn-dl:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
+    }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(5px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+      opacity: 1;
+    }
+
+    .modal {
+      background: #fff;
+      width: 92%;
+      max-width: 640px;
+      border-radius: 20px;
+      overflow: hidden;
+      transform: scale(0.95);
+      transition: 0.2s;
+    }
+
+    .modal-overlay.open .modal {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-family: 'Syne';
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+
+    .modal-close {
+      border: none;
+      background: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #94a3b8;
+    }
+
+    .modal-body {
+      padding: 28px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-field {
+      margin-bottom: 24px;
+    }
+
+    .modal-lbl {
+      font-size: 11px;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .modal-val {
+      font-family: 'JetBrains Mono';
+      font-size: 0.85rem;
+      background: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      word-break: break-all;
+    }
+
+    .modal-rem {
+      background: #f0fdf4;
+      border: 1px solid #dcfce7;
+      padding: 16px;
+      border-radius: 10px;
+      color: #166534;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a href="/" class="logo-container"><img src="/assets/Logo.png" class="logo-img" alt="Omni Scanner"></a>
+    <nav class="nav-menu">
+      <a href="/">📊 Dashboard</a>
+      <a href="/scans">🔍 Scans</a>
+      <a href="/history">🗂️ History</a>
+      <a href="/ai" class="active">✨ AI Threat Analysis</a>
+      <a href="/settings">⚙️ Settings</a>
+    </nav>
+    <div style="width: 100px;"></div>
+  </header>
+
+  <main>
+    <h1 class="page-title">AI Threat Intelligence Audit.</h1>
+
+    <div class="input-box" id="inputSection">
+      <input type="text" id="targetUrl" class="url-input" placeholder="http://testfire.net/"
+        value="http://testfire.net/">
+      <button class="btn-run" onclick="runAnalysis()">🚀 Run AI Audit</button>
+    </div>
+
+    <div id="terminal"></div>
+
+    <div style="margin-top: -16px; margin-bottom: 24px; text-align: center;">
+      <p style="font-size: 0.8rem; color: #64748b; font-style: italic;">
+        📌 Note: The AI scanner may not work on some targets due to Token Limitations. This limitation will be fixed in
+        coming updates. A manual scan must be performed before AI Analysis.
+      </p>
+    </div>
+
+    <div id="dashboard">
+      <div class="dash-head">
+        <div>
+          <div class="dash-title"> Gemini Analysis Report</div>
+          <div class="dash-url" id="resUrl">-</div>
+        </div>
+        <div id="riskPill"></div>
+      </div>
+
+      <div class="score-container">
+        <div class="score-left">
+          <span class="section-lbl">Security Score</span>
+          <div class="score-num" id="scoreVal">0</div>
+          <div class="score-total">out of 100</div>
+        </div>
+        <div class="score-right">
+          <div class="score-bars">
+            <div class="bar-row">
+              <div class="bar-lbl">Critical</div>
+              <div class="bar-bg">
+                <div id="bar-crit" class="bar-fill" style="background:#ef4444"></div>
+              </div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-lbl">Medium</div>
+              <div class="bar-bg">
+                <div id="bar-med" class="bar-fill" style="background:#f59e0b"></div>
+              </div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-lbl">Info</div>
+              <div class="bar-bg">
+                <div id="bar-info" class="bar-fill" style="background:#3b82f6"></div>
+              </div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-lbl">Passed</div>
+              <div class="bar-bg">
+                <div id="bar-pass" class="bar-fill" style="background:#22c55e"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <span class="section-lbl">Gemini Summary</span>
+        <div class="summary-card" id="summaryText"></div>
+      </div>
+
+      <div class="findings-box">
+        <span class="section-lbl">Findings</span>
+        <div id="findingsList"></div>
+      </div>
+
+      <div class="dash-footer">
+        <a id="pdfBtn" class="btn-run" target="_blank"
+          style="text-decoration:none; justify-content:center; margin: 32px; background: var(--accent);">
+          Download Executive Audit (PDF)
+        </a>
+      </div>
+
+      <div class="disclaimer-box">
+        <p class="disclaimer-text">
+          Important Note: AI Threat Intelligence scanning is an experimental reasoning layer. Always verify technical
+          findings with a manual security audit. Please note that the AI
+          scanner may not work on some targets due to Token Limitations. This limitation will be fixed in coming
+          updates.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <div class="modal-overlay" id="vOverlay" onclick="if(event.target===this) toggleModal(false)">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title" id="mTitle">Finding Detail</div>
+        <button class="modal-close" onclick="toggleModal(false)">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="modal-field">
+          <span class="modal-lbl">Description</span>
+          <div id="mDesc" style="color: #475569; font-size: 0.95rem;"></div>
+        </div>
+        <div class="modal-field">
+          <span class="modal-lbl">Remediation</span>
+          <div class="modal-rem" id="mRem"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function log(msg, type = '') {
+      const term = document.getElementById('terminal');
+      const div = document.createElement('div');
+      div.className = type ? 'term-' + type : '';
+      div.innerHTML = `[${new Date().toLocaleTimeString()}] ${msg}`;
+      term.appendChild(div);
+      term.scrollTop = term.scrollHeight;
+    }
+
+    function toggleModal(open) {
+      document.getElementById('vOverlay').classList.toggle('open', open);
+    }
+
+    function showFinding(name, desc, rem) {
+      document.getElementById('mTitle').innerText = name;
+      document.getElementById('mDesc').innerText = desc;
+      document.getElementById('mRem').innerText = rem;
+      toggleModal(true);
+    }
+
+    async function runAnalysis() {
+      const url = document.getElementById('targetUrl').value.trim();
+      if (!url) return;
+      const key = localStorage.getItem('omni:gemini_key') || "";
+
+      document.getElementById('terminal').style.display = 'block';
+      document.getElementById('terminal').innerHTML = '';
+      document.getElementById('dashboard').style.display = 'none';
+
+      log("Initializing AI Intelligence Layer...", "ai");
+      log(`Targeting: ${url}`);
+
+      try {
+        const res = await fetch(`/api/ai-analyze?url=${encodeURIComponent(url)}&api_key=${encodeURIComponent(key)}&skip_pdf=true`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || "API Failure");
+
+        log("Reasoning complete. High-fidelity synthesis achieved.", "success");
+        setTimeout(() => render(url, data), 1000);
+      } catch (e) {
+        log(`Error: ${e.message}`, "err");
+      }
+    }
+
+    function render(url, data) {
+      document.getElementById('terminal').style.display = 'none';
+      document.getElementById('dashboard').style.display = 'block';
+
+      document.getElementById('resUrl').innerText = url;
+      document.getElementById('scoreVal').innerText = data.security_score || 0;
+
+      const b = data.score_breakdown || {};
+      setTimeout(() => {
+        document.getElementById('bar-crit').style.width = (b.critical_pct || 0) + '%';
+        document.getElementById('bar-med').style.width = (b.medium_pct || 0) + '%';
+        document.getElementById('bar-info').style.width = (b.info_pct || 0) + '%';
+        document.getElementById('bar-pass').style.width = (b.passed_pct || 0) + '%';
+      }, 100);
+
+      const level = (data.risk_level || 'MEDIUM').toUpperCase();
+      let riskCls = 'risk-medium';
+      if (level === 'HIGH') riskCls = 'risk-high';
+      else if (level === 'SAFE') riskCls = 'risk-safe';
+      document.getElementById('riskPill').innerHTML = `<span class="risk-pill ${riskCls}">⚠️ ${level} RISK</span>`;
+
+      document.getElementById('summaryText').innerText = data.summary || "Summary generation in progress...";
+      const key = localStorage.getItem('omni:gemini_key') || "";
+      document.getElementById('pdfBtn').href = `/api/generate-ai-pdf?url=${encodeURIComponent(url)}&api_key=${encodeURIComponent(key)}`;
+
+      const list = document.getElementById('findingsList');
+      list.innerHTML = '';
+      (data.findings || []).forEach(f => {
+        const s = (f.severity || 'LOW').toLowerCase();
+        const div = document.createElement('div');
+        div.className = 'finding-card';
+        div.onclick = () => showFinding(f.name, f.full_details || f.short_description || "", f.remediation);
+
+        const tagHtml = (f.tags || []).map(t => {
+          const isCwe = t.toUpperCase().includes('CWE');
+          if (isCwe) {
+            const num = t.match(/\d+/);
+            const link = num ? `https://cwe.mitre.org/data/definitions/${num[0]}.html` : '#';
+            return `<a href="${link}" target="_blank" class="tag tag-highlight" onclick="event.stopPropagation()">${t} ↗</a>`;
+          }
+          return `<span class="tag">${t}</span>`;
+        }).join('');
+
+        div.innerHTML = `
+        <div class="finding-bar" style="background:${s === 'high' ? '#ef4444' : s === 'medium' ? '#f59e0b' : s === 'info' ? '#3b82f6' : '#22c55e'}"></div>
+        <div class="finding-body">
+          <div class="finding-name">${f.name}</div>
+          <div class="finding-desc">${f.short_description || ""}</div>
+          <div class="finding-tags">${tagHtml}</div>
+        </div>
+      `;
+        list.appendChild(div);
+      });
+    }
+  </script>
+</body>
+
+</html>

