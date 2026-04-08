@@ -46,6 +46,7 @@ def ui_settings():
 
 app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 app.mount("/assets", StaticFiles(directory="Assets"), name="assets")
+os.makedirs("reports", exist_ok=True)
 app.mount("/reports", StaticFiles(directory="reports"), name="reports")
 
 
