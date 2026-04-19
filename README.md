@@ -106,8 +106,21 @@ curl -X POST "http://127.0.0.1:8000/scan" ^
 ```
 
 ---
+##  Screenshots
 
-## 🛡️ Educational Disclaimer
+###  Dashboard
+![Dashboard](screenshots/Dashboard.png)
+
+###  Scan
+![Scan](screenshots/Scan.png)
+
+###  Ai Threat Analysis
+![Ai Threat Analysis](screenshots/Ai_Threat_Analysis.png)
+
+###  Executive Report
+![Executive Report](screenshots/Executive_Report_1-2.png)
+
+## ⚠️ Educational Disclaimer
 This vulnerability assessment framework was constructed purely for defensive educational audits and professional penetration testing workflows. The codebase aggressively tests structural integrity by interacting with forms and injecting raw queries.
 
 **Under no circumstances execute this tool against infrastructure or applications without explicit and documented authorization.**
