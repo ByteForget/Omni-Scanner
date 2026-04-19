@@ -36,7 +36,7 @@ Built dynamically across 16 core developmental phases, the engine natively parse
 Ensure you are running **Python 3.8+**.
 
 ```sh
-git clone <repository_url> omni-scanner
+git clone https://github.com/ByteForget/Omni-Scanner omni-scanner
 cd omni-scanner
 
 pip install -r requirements.txt
